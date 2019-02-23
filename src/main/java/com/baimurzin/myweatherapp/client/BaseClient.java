@@ -49,11 +49,11 @@ public class BaseClient {
      */
     protected Mono<ClientResponse> getClient(String uri, Map<String, String> variables,
                                              Map<String, String> headers, MediaType mediaType) {
-
+        log.debug("Call started");
         return webClient.get()
                 .uri(uriBuilder -> buildQuery(uriBuilder, uri, variables))
 //                .headers(cons -> headers != null ? cons.setAll(headers) : log.info("");)
-                .accept(mediaType)
+               .accept(mediaType)
                 .exchange();
     }
 
