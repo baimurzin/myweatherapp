@@ -20,7 +20,7 @@ public class WeatherResource {
 
     private final WeatherService weatherService;
 
-    @GetMapping(value = "/weather/{cityId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    @GetMapping(value = "/weather/{cityId}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     public Mono<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
         City city = new City();
         city.setCityId(cityId);
