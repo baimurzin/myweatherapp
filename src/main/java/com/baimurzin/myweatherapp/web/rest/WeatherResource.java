@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,10 +21,8 @@ public class WeatherResource {
     private final WeatherClient weatherClient;
 
     @GetMapping(value = "/weather/{cityId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
+    public Mono<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
 
-        return weatherClient.getWeatherByCity(new City(cityId))
-                .flatMapIterable(res -> res)
-                .map(res -> res);
+        return weatherClient.getWeatherByCity(new City(cityId));
     }
 }
