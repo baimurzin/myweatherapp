@@ -22,6 +22,6 @@ public class CityServiceImpl implements CityService {
     public Mono<City> add(CityDTO cityDTO) {
         City city = new City();
         city.setCityId(cityDTO.getCityId());
-        return Mono.just(cityRepository.save(city));
+        return cityRepository.save(city);
     }
 }
