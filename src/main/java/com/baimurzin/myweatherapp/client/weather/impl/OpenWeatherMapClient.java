@@ -21,7 +21,7 @@ public class OpenWeatherMapClient implements WeatherClient<WeatherResponse> {
 
     @Override
     public Mono<WeatherResponse> getWeatherByCity(City city) {
-        return weatherClient.getWeatherByCity(city, MediaType.APPLICATION_JSON)
+        return weatherClient.getWeatherByCity(city, MediaType.APPLICATION_STREAM_JSON)
                 .flatMap(res -> res.bodyToMono(WeatherResponse.class));
         //todo add extended class for different api call
     }

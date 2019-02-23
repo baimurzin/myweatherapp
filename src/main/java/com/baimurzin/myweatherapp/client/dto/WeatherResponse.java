@@ -3,30 +3,22 @@ package com.baimurzin.myweatherapp.client.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class WeatherResponse {
 
-    public WeatherResponse() {
-    }
+    private Wind wind;
 
-    @JsonCreator
-    public WeatherResponse(@JsonProperty String base,
-                           @JsonProperty Long visibility,
-                           @JsonProperty("name") String cityName,
-                           @JsonProperty("id") Long cityId) {
-        this.base = base;
-        this.visibility = visibility;
-        this.cityName = cityName;
-        this.cityId = cityId;
-    }
-
-//    private Wind wind;
-
-//    @JsonProperty("weather")
-//    private List<Weather> weather;
+    @JsonProperty("weather")
+    private List<Weather> weather;
 
     private String base;
 

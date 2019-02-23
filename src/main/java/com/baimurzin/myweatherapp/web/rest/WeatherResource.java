@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Mono;
+import reactor.core.publisher.Mono;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -20,8 +21,7 @@ public class WeatherResource {
 
     @GetMapping(value = "/weather/{cityId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Mono<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
-        City city = new City();
-        city.setCityId(cityId);//todo load and check it
-        return weatherClient.getWeatherByCity(city);
+
+        return weatherClient.getWeatherByCity(new City(cityId));
     }
 }
