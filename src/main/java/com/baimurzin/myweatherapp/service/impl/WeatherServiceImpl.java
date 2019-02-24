@@ -38,6 +38,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Mono<WeatherResponse> getWeather(City city) {
+        log.debug("Retrieving the weather for city: {} with city ID: {}", city.getCityName(), city.getCityId());
         return CacheMono.lookup(getWeatherByCityReader(), city.getCityId())
                 .onCacheMissResume(weatherClient.getWeatherByCity(city))
                 .andWriteWith(getWeatherWriter());
@@ -45,6 +46,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @SuppressWarnings("unchecked")
     private Function<Long, Mono<Signal<? extends WeatherResponse>>> getWeatherByCityReader() {
+        log.debug("Trying to read from cache first...");
         return k -> {
             Cache.ValueWrapper wrapper = cacheManager.getCache(CACHE_NAME).get(k);
             if (wrapper == null) return Mono.justOrEmpty(Optional.empty());
@@ -53,6 +55,7 @@ public class WeatherServiceImpl implements WeatherService {
     }
 
     private BiFunction<Long, Signal<? extends WeatherResponse>, Mono<Void>> getWeatherWriter() {
+        log.debug("Trying to put data into the cache...");
         return (key, value) -> Mono.fromRunnable(() -> cacheManager.getCache(CACHE_NAME).put(key, value));
     }
 

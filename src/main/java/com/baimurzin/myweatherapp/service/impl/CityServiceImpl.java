@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+import java.util.Optional;
+
 /**
  * Basic implementation of {@link CityService}
  *
@@ -36,6 +38,7 @@ public class CityServiceImpl implements CityService {
      */
     @Override
     public Mono<City> add(CityDTO cityDTO) {
+        log.debug("Registering city...");
         return checkCity(cityDTO.getCityId())
                 .map(CityRegistry::getId)
                 .map(cityRepository::findById)
@@ -45,8 +48,20 @@ public class CityServiceImpl implements CityService {
                      else {
                          CityRegistry cr = cityRegistryRepository.getOne(cityDTO.getCityId());
                          sink.next(cityRepository.save(new City(cr.getId(), cr.getName())));
+                         log.debug("City was registered: {}, {}", cr.getName(), cr.getCountry());
                      }
                 });
+    }
+
+    @Override
+    public Mono<Boolean> exists(Long id) {
+        return Mono.just(id)
+                .map(cityRepository::existsById);
+    }
+
+    @Override
+    public Mono<Optional<City>> findById(Long id) {
+        return Mono.just(cityRepository.findById(id));
     }
 
     /**
