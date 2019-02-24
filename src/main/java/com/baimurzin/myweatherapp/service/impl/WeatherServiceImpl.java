@@ -39,7 +39,7 @@ public class WeatherServiceImpl implements WeatherService {
     private final CacheManager cacheManager;
 
     @Override
-    public Mono<WeatherResponse> getWeatherForAllCities(City city) {
+    public Mono<WeatherResponse> getWeather(City city) {
         log.debug("Retrieving the weather for city: {} with city ID: {}", city.getCityName(), city.getCityId());
         return CacheMono.lookup(getWeatherByCityReader(), city.getCityId())
                 .onCacheMissResume(weatherClient.getWeatherByCity(city))
@@ -50,7 +50,7 @@ public class WeatherServiceImpl implements WeatherService {
     public Flux<WeatherResponse> getWeatherForAllCities(Flux<City> cities) {
         return Flux.defer(() -> cities)
                 .subscribeOn(Schedulers.elastic())
-                .flatMap(this::getWeatherForAllCities);
+                .flatMap(this::getWeather);
     }
 
     @Override

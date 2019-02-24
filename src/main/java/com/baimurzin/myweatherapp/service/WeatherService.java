@@ -21,7 +21,7 @@ public interface WeatherService {
      * @param city a City object
      * @return Mono of {@link WeatherResponse}
      */
-    Mono<WeatherResponse> getWeatherForAllCities(City city);
+    Mono<WeatherResponse> getWeather(City city);
 
     /**
      * Returns all objects of {@link WeatherResponse} for all

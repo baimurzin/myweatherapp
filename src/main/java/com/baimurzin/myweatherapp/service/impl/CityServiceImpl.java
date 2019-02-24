@@ -65,8 +65,7 @@ public class CityServiceImpl implements CityService {
 
     @Override
     public Flux<City> findAll() {
-        return Flux.defer(() -> Flux.fromIterable(cityRepository.findAll()))
-                .subscribeOn(Schedulers.elastic());
+        return Flux.defer(() -> Flux.fromIterable(cityRepository.findAll()));
     }
 
     @Override
