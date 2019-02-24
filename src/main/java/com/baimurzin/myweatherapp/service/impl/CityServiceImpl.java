@@ -12,7 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Scheduler;
+import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
 
@@ -62,6 +65,12 @@ public class CityServiceImpl implements CityService {
     @Override
     public Mono<Optional<City>> findById(Long id) {
         return Mono.just(cityRepository.findById(id));
+    }
+
+    @Override
+    public Flux<City> findAll() {
+        return Flux.defer(() -> Flux.fromIterable(cityRepository.findAll()))
+                .subscribeOn(Schedulers.elastic());
     }
 
     /**

@@ -3,6 +3,7 @@ package com.baimurzin.myweatherapp.service.impl;
 import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
 import com.baimurzin.myweatherapp.client.weather.WeatherClient;
 import com.baimurzin.myweatherapp.model.City;
+import com.baimurzin.myweatherapp.repository.CityRepository;
 import com.baimurzin.myweatherapp.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -10,9 +11,12 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import reactor.cache.CacheMono;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Signal;
+import reactor.core.scheduler.Schedulers;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -36,12 +40,21 @@ public class WeatherServiceImpl implements WeatherService {
 
     private final CacheManager cacheManager;
 
+    private final CityRepository cityRepository;
+
     @Override
-    public Mono<WeatherResponse> getWeather(City city) {
+    public Mono<WeatherResponse> getWeatherForAllCities(City city) {
         log.debug("Retrieving the weather for city: {} with city ID: {}", city.getCityName(), city.getCityId());
         return CacheMono.lookup(getWeatherByCityReader(), city.getCityId())
                 .onCacheMissResume(weatherClient.getWeatherByCity(city))
                 .andWriteWith(getWeatherWriter());
+    }
+
+    @Override
+    public Flux<WeatherResponse> getWeatherForAllCities(Flux<City> cities) {
+        return Flux.defer(() -> cities)
+                .subscribeOn(Schedulers.elastic())
+                .flatMap(this::getWeatherForAllCities);
     }
 
     @SuppressWarnings("unchecked")
