@@ -1,8 +1,6 @@
 package com.baimurzin.myweatherapp.web.rest;
 
 import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
-import com.baimurzin.myweatherapp.client.weather.WeatherClient;
-import com.baimurzin.myweatherapp.model.City;
 import com.baimurzin.myweatherapp.service.CityService;
 import com.baimurzin.myweatherapp.service.WeatherService;
 import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
@@ -12,7 +10,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
-import reactor.core.publisher.Mono;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -37,8 +35,13 @@ public class WeatherResource {
                         return Mono.just(city.get());
                     }
                 })
-                .flatMap(weatherService::getWeather);
+                .flatMap(weatherService::getWeatherForAllCities);
     }
 
+    @GetMapping(value = "/weather", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+    public Flux<WeatherResponse> getWeather() {
+        return cityService.findAll()
+                .flatMap(weatherService::getWeatherForAllCities);
+    }
 
 }

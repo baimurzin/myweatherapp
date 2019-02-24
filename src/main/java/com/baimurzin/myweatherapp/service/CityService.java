@@ -4,6 +4,7 @@ import com.baimurzin.myweatherapp.exception.CityAlreadyRegisteredException;
 import com.baimurzin.myweatherapp.exception.InvalidCityException;
 import com.baimurzin.myweatherapp.model.City;
 import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
@@ -43,4 +44,11 @@ public interface CityService {
      * @return the {@link Mono} of {@link City} entity
      */
     Mono<Optional<City>> findById(Long id);
+
+    /**
+     * Method retrieve all objects
+     *
+     * @return
+     */
+    Flux<City> findAll();
 }
