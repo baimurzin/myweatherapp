@@ -15,12 +15,19 @@ import org.springframework.batch.item.database.builder.JdbcBatchItemWriterBuilde
 import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import javax.sql.DataSource;
 
+/**
+ * The Batch Configuration which used to populate table
+ * when application is started.
+ *
+ * @author Vladislav Baimurzin
+ */
 @Slf4j
 @Configuration
 @EnableBatchProcessing
@@ -31,11 +38,21 @@ public class CityRegistryBatchConfiguration {
 
     private final StepBuilderFactory stepBuilderFactory;
 
+    @Value("${app.batch.csvCitiesFile}")
+    private final String resourceCsvFile;
+
+    /**
+     * The bean define the input. The reader method creates
+     * an ItemReade. It looks for passed csv file and
+     * parses it line by line.
+     *
+     *  @return reader for further processing
+     */
     @Bean
     public FlatFileItemReader<CityRegistry> reader() {
         return new FlatFileItemReaderBuilder<CityRegistry>()
                 .name("personItemReader")
-                .resource(new ClassPathResource("city.csv"))
+                .resource(new ClassPathResource(resourceCsvFile))
                 .delimited()
                 .names(new String[]{"lat","lon","country","id","name"})
                 .fieldSetMapper(new BeanWrapperFieldSetMapper<CityRegistry>() {{
@@ -43,6 +60,14 @@ public class CityRegistryBatchConfiguration {
                 }})
                 .build();
     }
+
+    /**
+     * The bean defines an ItemWriter. This one works with datasource
+     * to run sql statements to insert a single {@link CityRegistry}
+     *
+     * @param dataSource Datasource will be automatically injected
+     * @return an ItemWriter
+     */
     @Bean
     public JdbcBatchItemWriter<CityRegistry> writer(DataSource dataSource) {
         return new JdbcBatchItemWriterBuilder<CityRegistry>()
@@ -53,7 +78,13 @@ public class CityRegistryBatchConfiguration {
                 .build();
     }
 
-
+    /**
+     * The job importUserJob. Which will be registered to run on app start
+     *
+     * @param listener customer listener to log data and handle events
+     * @param step1 The step which will be run in scope of this job
+     * @return Job bean
+     */
     @Bean
     public Job importUserJob(JobCompletionNotificationListener listener, Step step1) {
         return jobBuilderFactory.get("importUserJob")
@@ -64,12 +95,17 @@ public class CityRegistryBatchConfiguration {
                 .build();
     }
 
+    /**
+     * Step which uses reader and writer to populate the table
+     *
+     * @param writer writer defined above
+     * @return the step used in the job
+     */
     @Bean
     public Step step1(JdbcBatchItemWriter<CityRegistry> writer) {
         return stepBuilderFactory.get("loadData")
-                .<CityRegistry, CityRegistry> chunk(500)
+                .<CityRegistry, CityRegistry> chunk(5000)
                 .reader(reader())
-//                .processor(processor())
                 .writer(writer)
                 .build();
     }

@@ -10,24 +10,30 @@ import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.stereotype.Service;
 import reactor.cache.CacheMono;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.core.publisher.Signal;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-
+/**
+ * Basic implementation of {@link WeatherService}
+ *
+ * @author Vladislav Baimurzin
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class WeatherServiceImpl implements WeatherService {
 
+    /**
+     * The name of cache that used for caching weather data
+     */
     private static final String CACHE_NAME = "WEATHER_CACHE";
 
     private final WeatherClient weatherClient;
+
     private final CacheManager cacheManager;
 
     @Override

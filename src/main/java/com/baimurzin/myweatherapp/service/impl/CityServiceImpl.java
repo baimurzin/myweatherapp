@@ -11,10 +11,14 @@ import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Mono;
 
+/**
+ * Basic implementation of {@link CityService}
+ *
+ * @author Vladislav Baimurzin
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -22,6 +26,7 @@ import reactor.core.publisher.Mono;
 public class CityServiceImpl implements CityService {
 
     private final CityRepository cityRepository;
+
     private final CityRegistryRepository cityRegistryRepository;
 
     @Override
@@ -40,6 +45,13 @@ public class CityServiceImpl implements CityService {
                 });
     }
 
+    /**
+     * Check if city with id exists in known sources
+     * otherwise raise an Exception
+     *
+     * @param id city id
+     * @return Mono of found {@link CityRegistry}
+     */
     private Mono<CityRegistry> checkCity(Long id) {
         return Mono.just(id)
                 .map(cityRegistryRepository::findById)
