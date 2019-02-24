@@ -47,7 +47,7 @@ public class WeatherResource {
                         return Mono.just(city.get());
                     }
                 })
-                .flatMap(weatherService::getWeatherForAllCities);
+                .flatMap(weatherService::getWeather);
     }
 
     /**
@@ -57,8 +57,7 @@ public class WeatherResource {
      */
     @GetMapping(value = "/weather", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<WeatherResponse> getWeather() {
-        return cityService.findAll()
-                .flatMap(weatherService::getWeatherForAllCities);
+        return weatherService.getWeatherForAllCities(cityService.findAll());
     }
 
 }
