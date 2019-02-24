@@ -3,6 +3,10 @@
 ### Getting started
 Date started 23 Feb 2019 14:30 Moscow Time
 
+### TODO 
+- Split into microservices(weather service, city service, Zuul, eureka ) 2-3days
+- Run it on K8S cluster on GCP :: 0.5– 1 day
+- Add CI/CD :: 0.5–1 day
 
 #Dev plan 
 ## Stage 1
@@ -10,29 +14,28 @@ Date started 23 Feb 2019 14:30 Moscow Time
 
 
 1. System design(several type of design)
-    1. API
-    2. Structure
-    3. Deployment
-    4. Flow...
+    - API
+    - Structure
+    - Deployment
+    - Flow...
 2. Implements API layer
     5. Register city(Existing), Storing in database
-        1. Controller
-        2. Model
-        3. DTO
-        4. Repository
-        5. Service 
-        6. Tests
-        7. Other services like checking if city exists
+        - Controller
+        - Model
+        - DTO
+        - Repository
+        - Service 
+        - Tests
+        - Other services like checking if city exists
     6. Get city weather 
-        8. Controller 
-        9. Service - Stage1: external Call API
-        10. Repository
-        11. Models
-        12. DTO
+        - Controller 
+        - Service - Stage1: external Call API
+        -  Repository
+        -  Models
+        -  DTO
 3. Error handling check
 
-## 
-    Stage 2
+## Stage 2
 
 1. API Layer 
     1. City Weather
