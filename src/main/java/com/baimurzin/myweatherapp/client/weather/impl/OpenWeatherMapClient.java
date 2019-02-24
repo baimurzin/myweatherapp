@@ -1,8 +1,8 @@
 package com.baimurzin.myweatherapp.client.weather.impl;
 
+import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
 import com.baimurzin.myweatherapp.client.weather.BaseWeatherClient;
 import com.baimurzin.myweatherapp.client.weather.WeatherClient;
-import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
 import com.baimurzin.myweatherapp.model.City;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +10,12 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
+/**
+ * The implementation of {@link WeatherClient}
+ * for retrieving current weather data from openweatherapi
+ *
+ * @author Vladislav Baimurzin
+ */
 @Service
 @Slf4j
 public class OpenWeatherMapClient implements WeatherClient<WeatherResponse> {

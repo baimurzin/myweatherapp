@@ -7,6 +7,7 @@ import com.baimurzin.myweatherapp.model.CityRegistry;
 import com.baimurzin.myweatherapp.repository.CityRegistryRepository;
 import com.baimurzin.myweatherapp.repository.CityRepository;
 import com.baimurzin.myweatherapp.service.CityService;
+import com.baimurzin.myweatherapp.service.WeatherService;
 import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Scheduler;
 import reactor.core.scheduler.Schedulers;
 
 import java.util.Optional;
@@ -34,6 +34,8 @@ public class CityServiceImpl implements CityService {
 
     private final CityRegistryRepository cityRegistryRepository;
 
+    private final WeatherService weatherService;
+
     /**
      * Implementation
      *
@@ -46,20 +48,14 @@ public class CityServiceImpl implements CityService {
                 .map(CityRegistry::getId)
                 .map(cityRepository::findById)
                 .handle((c, sink) -> {
-                     if (c.isPresent())
-                         sink.error(new CityAlreadyRegisteredException("City with such ID was already registered"));
-                     else {
-                         CityRegistry cr = cityRegistryRepository.getOne(cityDTO.getCityId());
-                         sink.next(cityRepository.save(new City(cr.getId(), cr.getName())));
-                         log.debug("City was registered: {}, {}", cr.getName(), cr.getCountry());
-                     }
+                    if (c.isPresent())
+                        sink.error(new CityAlreadyRegisteredException("City with such ID was already registered"));
+                    else {
+                        CityRegistry cr = cityRegistryRepository.getOne(cityDTO.getCityId());
+                        sink.next(cityRepository.save(new City(cr.getId(), cr.getName())));
+                        log.debug("City was registered: {}, {}", cr.getName(), cr.getCountry());
+                    }
                 });
-    }
-
-    @Override
-    public Mono<Boolean> exists(Long id) {
-        return Mono.just(id)
-                .map(cityRepository::existsById);
     }
 
     @Override
@@ -71,6 +67,17 @@ public class CityServiceImpl implements CityService {
     public Flux<City> findAll() {
         return Flux.defer(() -> Flux.fromIterable(cityRepository.findAll()))
                 .subscribeOn(Schedulers.elastic());
+    }
+
+    @Override
+    public Mono<Object> delete(Long cityId) {
+        return Mono.justOrEmpty(cityRepository.findById(cityId))
+                .switchIfEmpty(Mono.error(() -> new InvalidCityException("City not found.")))
+                .flatMap(city -> {
+                    cityRepository.delete(city);
+                    weatherService.deleteWeatherData(cityId);
+                    return Mono.empty();
+                });
     }
 
     /**

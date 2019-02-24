@@ -30,14 +30,6 @@ public interface CityService {
     Mono<City> add(CityDTO cityDTO) throws CityAlreadyRegisteredException, InvalidCityException;
 
     /**
-     * Method checks if city registered or not
-     *
-     * @param id City's id
-     * @return boolean {@code true} if exists
-     */
-    Mono<Boolean> exists(Long id);
-
-    /**
      * Method retrieves a {@link City} by its id.
      *
      * @param id must not be null.
@@ -48,7 +40,16 @@ public interface CityService {
     /**
      * Method retrieve all objects
      *
-     * @return
+     * @return all entities as a Flux
      */
     Flux<City> findAll();
+
+    /**
+     * Delete certain entity if it exists.
+     * Method also delete other data related to {@link City}
+     *
+     * @param cityId
+     * @return
+     */
+    Mono<Object> delete(Long cityId);
 }

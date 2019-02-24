@@ -1,6 +1,7 @@
 package com.baimurzin.myweatherapp.web.rest;
 
 import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
+import com.baimurzin.myweatherapp.model.City;
 import com.baimurzin.myweatherapp.service.CityService;
 import com.baimurzin.myweatherapp.service.WeatherService;
 import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
@@ -13,6 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+/**
+ * REST Controller for view and managing Weather data
+ *
+ * @author Vladislav Baimurzin
+ */
 @Slf4j
 @RequiredArgsConstructor
 @RestController
@@ -21,6 +27,12 @@ public class WeatherResource {
     private final WeatherService weatherService;
     private final CityService cityService;
 
+    /**
+     * GET /weather/:cityId : get the weather by city id
+     *
+     * @param cityId the id of {@link City}
+     * @return The {@link WeatherResponse} data for certain city
+     */
     @GetMapping(value = "/weather/{cityId}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
     public Mono<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
         //if city not registered, we register it if such city valid
@@ -38,6 +50,11 @@ public class WeatherResource {
                 .flatMap(weatherService::getWeatherForAllCities);
     }
 
+    /**
+     * GET /weather : get all weather for registered cities
+     *
+     * @return the Flux of {@link WeatherResponse}
+     */
     @GetMapping(value = "/weather", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<WeatherResponse> getWeather() {
         return cityService.findAll()
