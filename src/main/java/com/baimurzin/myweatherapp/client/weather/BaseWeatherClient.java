@@ -10,9 +10,18 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * The extended class that used for retrieving data from OpenWeatherMap
+ *
+ * @author Vladislav Baimurzin
+ * @see com.baimurzin.myweatherapp.client.weather.impl.OpenWeatherMapClient
+ */
 @Slf4j
 public class BaseWeatherClient extends BaseClient {
 
+    /**
+     * Api key to access external API
+     */
     private final String apiKey;
 
     /**
@@ -28,10 +37,24 @@ public class BaseWeatherClient extends BaseClient {
         log.debug("WeatherClient was successfully created");
     }
 
+    /**
+     * Call to get current weather for passed city
+     *
+     * @param city city
+     * @param mediaTypeAccept media type need to configure client
+     * @return Mono of ClientResponse
+     */
     public Mono<ClientResponse> getWeatherByCity(City city, MediaType mediaTypeAccept) {
         return this.getClient("/data/2.5/weather", createQuery(city, apiKey), null, mediaTypeAccept);
     }
 
+    /**
+     * Building query from passed parameters
+     *
+     * @param city a {@link City} object
+     * @param apiKey api key that used for accessing external api endpoints
+     * @return map<key, value> of parameters
+     */
     private static Map<String, String> createQuery(City city, String apiKey) {
         Map<String, String> query = new HashMap<>();
         query.put("id", String.valueOf(city.getCityId()));

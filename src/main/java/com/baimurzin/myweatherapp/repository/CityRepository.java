@@ -1,9 +1,7 @@
 package com.baimurzin.myweatherapp.repository;
 
 import com.baimurzin.myweatherapp.model.City;
-import com.baimurzin.myweatherapp.model.CityRegistry;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 
 /**
  * Jpa repository not-reactive.

@@ -3,7 +3,6 @@ package com.baimurzin.myweatherapp.service.impl;
 import com.baimurzin.myweatherapp.client.dto.WeatherResponse;
 import com.baimurzin.myweatherapp.client.weather.WeatherClient;
 import com.baimurzin.myweatherapp.model.City;
-import com.baimurzin.myweatherapp.repository.CityRepository;
 import com.baimurzin.myweatherapp.service.WeatherService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +15,6 @@ import reactor.core.publisher.Mono;
 import reactor.core.publisher.Signal;
 import reactor.core.scheduler.Schedulers;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -40,8 +38,6 @@ public class WeatherServiceImpl implements WeatherService {
 
     private final CacheManager cacheManager;
 
-    private final CityRepository cityRepository;
-
     @Override
     public Mono<WeatherResponse> getWeatherForAllCities(City city) {
         log.debug("Retrieving the weather for city: {} with city ID: {}", city.getCityName(), city.getCityId());
@@ -57,6 +53,17 @@ public class WeatherServiceImpl implements WeatherService {
                 .flatMap(this::getWeatherForAllCities);
     }
 
+    @Override
+    public Mono<Void> deleteWeatherData(Long city) {
+        log.debug("Trying to evict cache: {} for this key: {}", CACHE_NAME, city);
+        return Mono.fromRunnable(() -> cacheManager.getCache(CACHE_NAME).evict(city));
+    }
+
+    /**
+     * The {@link Function} that looks up {@link Signal} from a cache, returning
+     *      *  them as a {@link Mono Mono&lt;Signal&gt;}
+     * @return this reader function
+     */
     @SuppressWarnings("unchecked")
     private Function<Long, Mono<Signal<? extends WeatherResponse>>> getWeatherByCityReader() {
         log.debug("Trying to read from cache first...");
@@ -67,6 +74,11 @@ public class WeatherServiceImpl implements WeatherService {
         };
     }
 
+    /**
+     * Function that used to store the source data into the cache in case of cache miss.
+     *
+     * @return Cache writer {@link BiFunction}
+     */
     private BiFunction<Long, Signal<? extends WeatherResponse>, Mono<Void>> getWeatherWriter() {
         log.debug("Trying to put data into the cache...");
         return (key, value) -> Mono.fromRunnable(() -> cacheManager.getCache(CACHE_NAME).put(key, value));
