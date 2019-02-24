@@ -39,7 +39,7 @@ public class CityRegistryBatchConfiguration {
     private final StepBuilderFactory stepBuilderFactory;
 
     @Value("${app.batch.csvCitiesFile}")
-    private final String resourceCsvFile;
+    private String resourceCsvFile;
 
     /**
      * The bean define the input. The reader method creates

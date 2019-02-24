@@ -29,10 +29,14 @@ public class CityServiceImpl implements CityService {
 
     private final CityRegistryRepository cityRegistryRepository;
 
+    /**
+     * Implementation
+     *
+     * @see CityService
+     */
     @Override
     public Mono<City> add(CityDTO cityDTO) {
         return checkCity(cityDTO.getCityId())
-                .onErrorResume(Mono::error)
                 .map(CityRegistry::getId)
                 .map(cityRepository::findById)
                 .handle((c, sink) -> {
