@@ -38,15 +38,7 @@ public class WeatherResource {
         //if city not registered, we register it if such city valid
         //then we will find the weather for it
         return cityService.findById(cityId)
-                .flatMap(city -> {
-                    if (!city.isPresent()) {
-                        log.debug("No such city registered. Trying to register it...");
-                        return cityService.add(new CityDTO(cityId));
-                    } else {
-                        log.debug("City found in database. Trying to get weather for it...");
-                        return Mono.just(city.get());
-                    }
-                })
+                .switchIfEmpty(Mono.defer(() -> cityService.add(new CityDTO(cityId))))
                 .flatMap(weatherService::getWeather);
     }
 

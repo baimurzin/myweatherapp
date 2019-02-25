@@ -1,7 +1,7 @@
 package com.baimurzin.myweatherapp.repository;
 
 import com.baimurzin.myweatherapp.model.CityRegistry;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
 
 /**
  * Jpa repository not-reactive.
@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  *
  * @author Vladislav Baimurzin
  */
-public interface CityRegistryRepository extends JpaRepository<CityRegistry, Long> {
+public interface CityRegistryRepository extends R2dbcRepository<CityRegistry, Long> {
 }

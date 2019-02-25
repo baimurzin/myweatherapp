@@ -11,12 +11,13 @@ import com.baimurzin.myweatherapp.service.WeatherService;
 import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import reactor.core.scheduler.Schedulers;
 
+import javax.swing.text.html.Option;
 import java.util.Optional;
 
 /**
@@ -30,10 +31,13 @@ import java.util.Optional;
 @Transactional
 public class CityServiceImpl implements CityService {
 
+    @Autowired
     private final CityRepository cityRepository;
 
+    @Autowired
     private final CityRegistryRepository cityRegistryRepository;
 
+    @Autowired
     private final WeatherService weatherService;
 
     /**
@@ -44,39 +48,32 @@ public class CityServiceImpl implements CityService {
     @Override
     public Mono<City> add(CityDTO cityDTO) {
         log.debug("Registering city...");
-        return checkCity(cityDTO.getCityId())
-                .map(CityRegistry::getId)
-                .map(cityRepository::findById)
-                .handle((c, sink) -> {
-                    if (c.isPresent())
-                        sink.error(new CityAlreadyRegisteredException("City with such ID was already registered"));
-                    else {
-                        CityRegistry cr = cityRegistryRepository.getOne(cityDTO.getCityId());
-                        sink.next(cityRepository.save(new City(cr.getId(), cr.getName())));
-                        log.debug("City was registered: {}, {}", cr.getName(), cr.getCountry());
-                    }
-                });
+        return Mono.just(cityDTO.getCityId())
+                .flatMap(this::checkCity)
+                .flatMap(cr -> cityRepository.existsById(cr.getId()))
+                .flatMap(exists -> exists
+                        ? Mono.error(new CityAlreadyRegisteredException("City with such ID was already registered"))
+                        : cityRegistryRepository.findById(cityDTO.getCityId())
+                            .flatMap(cr -> cityRepository.save(new City(cr.getId(), cr.getName()))));
+
     }
 
     @Override
-    public Mono<Optional<City>> findById(Long id) {
-        return Mono.just(cityRepository.findById(id));
+    public Mono<City> findById(Long id) {
+        return cityRepository.findById(id);
     }
 
     @Override
     public Flux<City> findAll() {
-        return Flux.defer(() -> Flux.fromIterable(cityRepository.findAll()));
+        return cityRepository.findAll();
     }
 
     @Override
     public Mono<Object> delete(Long cityId) {
-        return Mono.justOrEmpty(cityRepository.findById(cityId))
+        return cityRepository.findById(cityId)
                 .switchIfEmpty(Mono.error(() -> new InvalidCityException("City not found.")))
-                .flatMap(city -> {
-                    cityRepository.delete(city);
-                    weatherService.deleteWeatherData(cityId);
-                    return Mono.empty();
-                });
+                .flatMap(city -> cityRepository.delete(city)
+                        .then(weatherService.deleteWeatherData(cityId)));
     }
 
     /**
@@ -88,12 +85,7 @@ public class CityServiceImpl implements CityService {
      */
     private Mono<CityRegistry> checkCity(Long id) {
         return Mono.just(id)
-                .map(cityRegistryRepository::findById)
-                .handle((cr, sink) -> {
-                    if (!cr.isPresent())
-                        sink.error(new InvalidCityException("No such city in our database. City id: " + id));
-                    else
-                        sink.next(cr.get());
-                });
+                .flatMap(cityRegistryRepository::findById)
+                .switchIfEmpty(Mono.error(() -> new InvalidCityException("No such city in our registry database. City id: " + id)));
     }
 }

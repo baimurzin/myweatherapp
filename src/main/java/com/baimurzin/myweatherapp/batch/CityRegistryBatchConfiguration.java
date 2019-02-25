@@ -104,7 +104,7 @@ public class CityRegistryBatchConfiguration {
     @Bean
     public Step step1(JdbcBatchItemWriter<CityRegistry> writer) {
         return stepBuilderFactory.get("loadData")
-                .<CityRegistry, CityRegistry> chunk(5000)
+                .<CityRegistry, CityRegistry> chunk(3000)
                 .reader(reader())
                 .writer(writer)
                 .build();
