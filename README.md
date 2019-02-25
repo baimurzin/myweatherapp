@@ -7,6 +7,7 @@ Date started 23 Feb 2019 14:30 Moscow Time
 - Split into microservices(weather service, city service, Zuul, eureka ) 2-3days
 - Run it on K8S cluster on GCP :: 0.5– 1 day
 - Add CI/CD :: 0.5–1 day
+- Add full non-blocking/reactive support see appropriate branch
 
 #Dev plan 
 ## Stage 1
