@@ -40,6 +40,7 @@ public class WeatherResource {
         return cityService.findById(cityId)
                 .switchIfEmpty(Mono.defer(() -> cityService.add(new CityDTO(cityId))))
                 .flatMap(weatherService::getWeather);
+        //todo wrong behaviour
     }
 
     /**
