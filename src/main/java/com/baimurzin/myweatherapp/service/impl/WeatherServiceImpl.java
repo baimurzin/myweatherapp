@@ -48,8 +48,7 @@ public class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Flux<WeatherResponse> getWeatherForAllCities(Flux<City> cities) {
-        return Flux.defer(() -> cities)
-                .subscribeOn(Schedulers.elastic())
+        return cities.subscribeOn(Schedulers.elastic())
                 .flatMap(this::getWeather);
     }
 

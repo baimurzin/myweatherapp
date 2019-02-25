@@ -7,8 +7,6 @@ import com.baimurzin.myweatherapp.web.rest.dto.CityDTO;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
-
 /**
  * The service provides methods and abstraction to manage
  * city resources. That can produces {@link Mono} or {@link reactor.core.publisher.Flux}
@@ -35,7 +33,7 @@ public interface CityService {
      * @param id must not be null.
      * @return the {@link Mono} of {@link City} entity
      */
-    Mono<Optional<City>> findById(Long id);
+    Mono<City> findById(Long id);
 
     /**
      * Method retrieve all objects
