@@ -33,7 +33,7 @@ public class WeatherResource {
      * @param cityId the id of {@link City}
      * @return The {@link WeatherResponse} data for certain city
      */
-    @GetMapping(value = "/weather/{cityId}", produces = {MediaType.TEXT_EVENT_STREAM_VALUE})
+    @GetMapping(value = "/weather/{cityId}", produces = {MediaType.APPLICATION_STREAM_JSON_VALUE})
     public Mono<WeatherResponse> getWeatherByCityId(@PathVariable Long cityId) {
         //if city not registered, we register it if such city valid
         //then we will find the weather for it
