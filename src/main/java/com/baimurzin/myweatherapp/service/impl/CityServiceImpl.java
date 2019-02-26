@@ -54,7 +54,8 @@ public class CityServiceImpl implements CityService {
                 .flatMap(exists -> exists
                         ? Mono.error(new CityAlreadyRegisteredException("City with such ID was already registered"))
                         : cityRegistryRepository.findById(cityDTO.getCityId())
-                            .flatMap(cr -> cityRepository.save(new City(cr.getId(), cr.getName()))));
+                        .flatMap(cr -> cityRepository.save(new City(cr.getId(), cr.getName()))
+                                .switchIfEmpty(cityRepository.findById(cr.getId()))));
 
     }
 
