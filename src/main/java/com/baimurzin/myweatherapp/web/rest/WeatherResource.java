@@ -38,8 +38,9 @@ public class WeatherResource {
         //if city not registered, we register it if such city valid
         //then we will find the weather for it
         return cityService.findById(cityId)
-                .switchIfEmpty(Mono.defer(() -> cityService.add(new CityDTO(cityId))))
-                .flatMap(weatherService::getWeather);
+                .flatMap(weatherService::getWeather)
+                .switchIfEmpty(cityService.add(new CityDTO(cityId))
+                        .flatMap(weatherService::getWeather));
         //todo wrong behaviour
     }
 
