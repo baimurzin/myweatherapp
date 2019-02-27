@@ -31,7 +31,6 @@ import static org.junit.Assert.*;
 //@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class CityServiceTest {
-//96 70 71
 
     @Mock
     private CityRepository cityRepository;

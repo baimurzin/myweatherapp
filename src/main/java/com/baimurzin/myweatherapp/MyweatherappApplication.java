@@ -8,7 +8,6 @@ import org.springframework.web.reactive.config.EnableWebFlux;
 
 @SpringBootApplication
 @EnableScheduling
-@EnableWebFlux
 public class MyweatherappApplication {
 
     public static void main(String[] args) {
