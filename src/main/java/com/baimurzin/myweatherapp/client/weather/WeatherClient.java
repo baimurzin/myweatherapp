@@ -5,6 +5,7 @@ import com.baimurzin.myweatherapp.model.City;
 import reactor.core.publisher.Mono;
 
 /**
+ * Weather client that describes method to access API
  *
  * @param <T>
  */

@@ -11,7 +11,8 @@ import java.net.URI;
 import java.util.Map;
 
 /**
- * Non-blocking reactive client for todo
+ * Non-blocking reactive client for exchange data with API.
+ * Uses {@link WebClient} as main HTTP client
  *
  * @author Vladislav Baimurzin
  * @version 0.1

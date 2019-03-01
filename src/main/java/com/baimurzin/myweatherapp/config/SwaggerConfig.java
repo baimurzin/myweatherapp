@@ -7,7 +7,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2WebFlux;
 
 /**
  * Swagger configuration class.
- * Registering swagger component
+ * Registering swagger component for generating API docs.
  *
  * @author Vladislav Baimurzin
  */

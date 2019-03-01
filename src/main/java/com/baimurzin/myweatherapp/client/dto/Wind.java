@@ -5,6 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+/**
+ * Part of {@link WeatherResponse}.
+ *
+ * @author Vladislav Baimurzin
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @AllArgsConstructor

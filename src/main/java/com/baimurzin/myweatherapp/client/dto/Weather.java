@@ -5,6 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Just a Data transfer object representation of WeatherResponse
+ *
+ * @author Vladislav Baimurzin
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
 @AllArgsConstructor

@@ -8,6 +8,11 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import reactor.core.scheduler.Schedulers;
 
+/**
+ * Class for declaring a scheduled task.
+ *
+ * Task does an updates of weather in cache.
+ */
 @Service
 @Slf4j
 @RequiredArgsConstructor

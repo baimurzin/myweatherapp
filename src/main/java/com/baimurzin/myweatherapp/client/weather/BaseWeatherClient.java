@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The extended class that used for retrieving data from OpenWeatherMap
+ * The extended class that used for retrieving data from OpenWeatherMap API
  *
  * @author Vladislav Baimurzin
  * @see com.baimurzin.myweatherapp.client.weather.impl.OpenWeatherMapClient

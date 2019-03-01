@@ -7,13 +7,12 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
-//import javax.persistence.Column;
-//import javax.persistence.Entity;
-//import javax.persistence.Id;
-//import javax.persistence.Table;
-
+/**
+ * CityRegistry - used to keep information about cities and check if such city is exists.
+ *
+ * @author Vladislav Baimurzin
+ */
 @Table("city_registry")
-//@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

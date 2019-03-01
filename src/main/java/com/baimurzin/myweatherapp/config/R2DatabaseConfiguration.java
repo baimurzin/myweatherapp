@@ -14,6 +14,12 @@ import org.springframework.data.r2dbc.repository.config.EnableR2dbcRepositories;
 import org.springframework.data.r2dbc.repository.support.R2dbcRepositoryFactory;
 import org.springframework.data.relational.core.mapping.RelationalMappingContext;
 
+/**
+ * Class describes configuration for connectivity with DB
+ * and beans to work with database in specific reactive way.
+ *
+ * @author Vladislav Baimurzin
+ */
 @Configuration
 @EnableR2dbcRepositories
 @RequiredArgsConstructor

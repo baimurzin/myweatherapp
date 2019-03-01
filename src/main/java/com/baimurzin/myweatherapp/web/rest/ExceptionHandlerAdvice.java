@@ -11,6 +11,11 @@ import reactor.core.publisher.Mono;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Simple exception handler
+ *
+ * @author Vladislav Baimurzin
+ */
 @ControllerAdvice
 public class ExceptionHandlerAdvice {
 

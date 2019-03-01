@@ -9,6 +9,11 @@ import lombok.NoArgsConstructor;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
+/**
+ * Class used as DTO to get data from API endpoint as root element in response.
+ *
+ * @author Vladislav Baimurzin
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

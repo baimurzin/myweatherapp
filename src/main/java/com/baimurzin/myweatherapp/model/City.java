@@ -10,10 +10,14 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
+/**
+ * An Entity representation. Describe city object
+ *
+ * @author Vladislav Baimurzin
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-//@Entity/
 @Table("cities")
 public class City implements Persistable<Long> {
 
